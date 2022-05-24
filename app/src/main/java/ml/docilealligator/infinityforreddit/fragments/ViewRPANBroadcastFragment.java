@@ -1,6 +1,6 @@
 package ml.docilealligator.infinityforreddit.fragments;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -31,7 +31,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.ExoTrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.TrackSelectionDialogBuilder;
@@ -175,7 +175,7 @@ public class ViewRPANBroadcastFragment extends Fragment {
             }
         });
 
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory();
+        ExoTrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory();
         trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         player = ExoPlayerFactory.newSimpleInstance(mActivity, trackSelector);
         playerView.setPlayer(player);
@@ -218,10 +218,8 @@ public class ViewRPANBroadcastFragment extends Fragment {
                                 getString(R.string.select_video_quality), trackSelector, 0);
                         builder.setShowDisableOption(true);
                         builder.setAllowAdaptiveSelections(false);
-                        AlertDialog alertDialog = builder.build();
+                        Dialog alertDialog = builder.build();
                         alertDialog.show();
-                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mCustomThemeWrapper.getPrimaryTextColor());
-                        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mCustomThemeWrapper.getPrimaryTextColor());
                     });
 
                     for (int i = 0; i < trackGroups.length; i++) {

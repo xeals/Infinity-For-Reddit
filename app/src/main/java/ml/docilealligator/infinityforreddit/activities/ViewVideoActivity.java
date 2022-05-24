@@ -6,7 +6,7 @@ import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
 
 import android.Manifest;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -55,7 +55,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.ExoTrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.TrackSelectionDialogBuilder;
@@ -399,7 +399,7 @@ public class ViewVideoActivity extends AppCompatActivity implements CustomFontRe
         String postTitle = intent.getStringExtra(EXTRA_POST_TITLE);
         setSmallTitle(postTitle);
 
-        playerControlView.setVisibilityListener(visibility -> {
+        playerControlView.addVisibilityListener(visibility -> {
             switch (visibility) {
                 case View.GONE:
                     getWindow().getDecorView().setSystemUiVisibility(
@@ -418,7 +418,7 @@ public class ViewVideoActivity extends AppCompatActivity implements CustomFontRe
             }
         });
 
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory();
+        ExoTrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory();
         trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
         if (videoType == VIDEO_TYPE_NORMAL && isDataSavingMode && dataSavingModeDefaultResolution > 0) {
             trackSelector.setParameters(
@@ -623,10 +623,8 @@ public class ViewVideoActivity extends AppCompatActivity implements CustomFontRe
                             TrackSelectionDialogBuilder builder = new TrackSelectionDialogBuilder(ViewVideoActivity.this, getString(R.string.select_video_quality), trackSelector, 0);
                             builder.setShowDisableOption(true);
                             builder.setAllowAdaptiveSelections(false);
-                            AlertDialog alertDialog = builder.build();
+                            Dialog alertDialog = builder.build();
                             alertDialog.show();
-                            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mCustomThemeWrapper.getPrimaryTextColor());
-                            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mCustomThemeWrapper.getPrimaryTextColor());
                         });
                     }
 
