@@ -168,7 +168,7 @@ dependencies {
     implementation 'com.github.Ferfalk:SimpleSearchView:0.2.0'
 
     // Customizable TextView
-    implementation 'com.libRG:customtextview:2.4'
+    implementation files('../lib/customtextview-2.1.aar')
 
     // Dismiss gesturing
     implementation 'com.r0adkll:slidableactivity:2.1.0'
