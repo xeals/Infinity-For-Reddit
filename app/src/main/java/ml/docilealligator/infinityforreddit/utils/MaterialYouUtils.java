@@ -10,11 +10,15 @@ import android.os.Handler;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
+import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.Executor;
 
+import ml.docilealligator.infinityforreddit.R;
 import ml.docilealligator.infinityforreddit.RedditDataRoomDatabase;
 import ml.docilealligator.infinityforreddit.customtheme.CustomTheme;
 import ml.docilealligator.infinityforreddit.customtheme.CustomThemeWrapper;
@@ -40,6 +44,72 @@ public class MaterialYouUtils {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private static void applyDynamicTheme(CustomTheme theme,
+                                          Context context,
+                                          @ColorInt int primary,
+                                          @ColorInt int secondary,
+                                          @ColorInt int tertiary,
+                                          @ColorInt int primaryContainer,
+                                          @ColorInt int onPrimaryContainer,
+                                          @ColorInt int tertiaryContainer,
+                                          @ColorInt int onTertiaryContainer,
+                                          @ColorInt int background,
+                                          @ColorInt int surface,
+                                          @ColorInt int onSurface,
+                                          @ColorInt int surfaceVariant,
+                                          @ColorInt int onSurfaceVariant) {
+        // Process the overlay the same way as SurfaceColors using explicit light/dark colors.
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(
+                true, primary, tertiary, surface,
+                context.getResources().getDisplayMetrics().density);
+        int surfaceElevation1 =
+                elevationOverlayProvider.compositeOverlay(
+                        surface,
+                        context.getResources().getDimension(R.dimen.m3_sys_elevation_level1));
+        int surfaceElevation2 =
+                elevationOverlayProvider.compositeOverlay(
+                        surface,
+                        context.getResources().getDimension(R.dimen.m3_sys_elevation_level2));
+
+        theme.colorPrimary = surfaceElevation2;
+        theme.colorPrimaryDark = theme.colorPrimary;
+        theme.colorAccent = primary;
+        theme.colorPrimaryLightTheme = primaryContainer;
+        theme.backgroundColor = background;
+        theme.cardViewBackgroundColor = surfaceElevation1;
+        theme.commentBackgroundColor = surface;
+        theme.awardedCommentBackgroundColor = surface;
+        theme.bottomAppBarBackgroundColor = surfaceElevation2;
+        theme.navBarColor = surfaceElevation2;
+        theme.primaryTextColor = onSurface;
+        theme.secondaryTextColor = onSurfaceVariant;
+        theme.buttonTextColor = onSurfaceVariant;
+        theme.bottomAppBarIconColor = theme.buttonTextColor;
+        theme.primaryIconColor = primary;
+        theme.fabIconColor = onPrimaryContainer;
+        theme.toolbarPrimaryTextAndIconColor = theme.buttonTextColor;
+        theme.toolbarSecondaryTextColor = theme.buttonTextColor;
+        theme.tabLayoutWithCollapsedCollapsingToolbarTabIndicator = primary;
+        theme.tabLayoutWithCollapsedCollapsingToolbarTextColor = onSurface;
+        theme.tabLayoutWithCollapsedCollapsingToolbarTabBackground = theme.colorPrimary;
+        theme.tabLayoutWithExpandedCollapsingToolbarTabBackground = theme.backgroundColor;
+        theme.tabLayoutWithExpandedCollapsingToolbarTabIndicator = primary;
+        theme.tabLayoutWithExpandedCollapsingToolbarTextColor = onSurface;
+        theme.circularProgressBarBackground = surface;
+        theme.dividerColor = onSurfaceVariant;
+
+        theme.readPostCardViewBackgroundColor = surface;
+        theme.stickiedPostIconTint = theme.buttonTextColor;
+        theme.postTypeTextColor = onPrimaryContainer;
+        theme.postTypeBackgroundColor = primaryContainer;
+        theme.flairTextColor = onTertiaryContainer;
+        theme.flairBackgroundColor = tertiaryContainer;
+        theme.fullyCollapsedCommentBackgroundColor = surfaceVariant;
+        theme.username = primary;
+        theme.subreddit = secondary;
+    }
+
     public static void changeTheme(Context context, Executor executor, Handler handler,
                                    RedditDataRoomDatabase redditDataRoomDatabase,
                                    CustomThemeWrapper customThemeWrapper,
@@ -56,61 +126,40 @@ public class MaterialYouUtils {
                 CustomTheme darkTheme = CustomThemeWrapper.getIndigoDark(context);
                 CustomTheme amoledTheme = CustomThemeWrapper.getIndigoAmoled(context);
 
-                lightTheme.colorPrimary = context.getColor(android.R.color.system_accent1_100);
-                lightTheme.colorPrimaryDark = lightTheme.colorPrimary;
-                lightTheme.colorAccent = context.getColor(android.R.color.system_accent3_300);
-                lightTheme.colorPrimaryLightTheme = lightTheme.colorPrimary;
-                lightTheme.backgroundColor = context.getColor(android.R.color.system_neutral1_100);
-                lightTheme.cardViewBackgroundColor = context.getColor(android.R.color.system_neutral2_50);
-                lightTheme.commentBackgroundColor = context.getColor(android.R.color.system_neutral2_50);
-                lightTheme.awardedCommentBackgroundColor = context.getColor(android.R.color.system_neutral2_50);
-                lightTheme.bottomAppBarBackgroundColor = lightTheme.colorPrimary;
-                lightTheme.navBarColor = lightTheme.colorPrimary;
-                lightTheme.primaryTextColor = context.getColor(android.R.color.system_neutral1_900);
-                lightTheme.secondaryTextColor = context.getColor(android.R.color.system_neutral1_700);
-                lightTheme.buttonTextColor = context.getColor(android.R.color.system_accent1_800);
-                lightTheme.bottomAppBarIconColor = lightTheme.buttonTextColor;
-                lightTheme.primaryIconColor = context.getColor(android.R.color.system_accent1_400);
-                lightTheme.fabIconColor = lightTheme.buttonTextColor;
-                lightTheme.toolbarPrimaryTextAndIconColor = lightTheme.buttonTextColor;
-                lightTheme.toolbarSecondaryTextColor = lightTheme.buttonTextColor;
-                lightTheme.tabLayoutWithCollapsedCollapsingToolbarTabIndicator = lightTheme.buttonTextColor;
-                lightTheme.tabLayoutWithCollapsedCollapsingToolbarTextColor = lightTheme.buttonTextColor;
-                lightTheme.tabLayoutWithCollapsedCollapsingToolbarTabBackground = lightTheme.colorPrimary;
-                lightTheme.tabLayoutWithExpandedCollapsingToolbarTabBackground = lightTheme.backgroundColor;
-                lightTheme.tabLayoutWithExpandedCollapsingToolbarTabIndicator = lightTheme.buttonTextColor;
-                lightTheme.tabLayoutWithExpandedCollapsingToolbarTextColor = lightTheme.buttonTextColor;
-                lightTheme.circularProgressBarBackground = context.getColor(android.R.color.system_accent1_10);
-                lightTheme.dividerColor = context.getColor(android.R.color.system_neutral1_400);
+                applyDynamicTheme(
+                        lightTheme,
+                        context,
+                        context.getColor(android.R.color.system_accent1_600),
+                        context.getColor(android.R.color.system_accent2_600),
+                        context.getColor(android.R.color.system_accent3_600),
+                        context.getColor(android.R.color.system_accent1_100),
+                        context.getColor(android.R.color.system_accent1_900),
+                        context.getColor(android.R.color.system_accent3_100),
+                        context.getColor(android.R.color.system_accent3_900),
+                        context.getColor(android.R.color.system_neutral1_10),
+                        context.getColor(android.R.color.system_neutral1_10),
+                        context.getColor(android.R.color.system_neutral1_900),
+                        context.getColor(android.R.color.system_neutral2_100),
+                        context.getColor(android.R.color.system_neutral2_700));
                 lightTheme.isLightStatusBar = true;
                 lightTheme.isChangeStatusBarIconColorAfterToolbarCollapsedInImmersiveInterface = true;
                 lightTheme.name = "Material You";
 
-                darkTheme.colorPrimary = context.getColor(android.R.color.system_accent2_800);
-                darkTheme.colorPrimaryDark = darkTheme.colorPrimary;
-                darkTheme.colorAccent = context.getColor(android.R.color.system_accent3_100);
-                darkTheme.colorPrimaryLightTheme = context.getColor(android.R.color.system_accent1_300);
-                darkTheme.backgroundColor = context.getColor(android.R.color.system_neutral1_900);
-                darkTheme.cardViewBackgroundColor = context.getColor(android.R.color.system_neutral2_800);
-                darkTheme.commentBackgroundColor = context.getColor(android.R.color.system_neutral2_800);
-                darkTheme.awardedCommentBackgroundColor = context.getColor(android.R.color.system_neutral2_800);
-                darkTheme.bottomAppBarBackgroundColor = context.getColor(android.R.color.system_accent2_800);
-                darkTheme.navBarColor = darkTheme.colorPrimary;
-                darkTheme.primaryTextColor = context.getColor(android.R.color.system_neutral1_10);
-                darkTheme.secondaryTextColor = context.getColor(android.R.color.system_neutral1_10);
-                darkTheme.bottomAppBarIconColor = context.getColor(android.R.color.system_accent1_100);;
-                darkTheme.primaryIconColor = context.getColor(android.R.color.system_accent1_100);
-                darkTheme.fabIconColor = context.getColor(android.R.color.system_neutral1_900);
-                darkTheme.toolbarPrimaryTextAndIconColor = context.getColor(android.R.color.system_accent2_100);
-                darkTheme.toolbarSecondaryTextColor = darkTheme.toolbarPrimaryTextAndIconColor;
-                darkTheme.tabLayoutWithCollapsedCollapsingToolbarTabIndicator = darkTheme.toolbarPrimaryTextAndIconColor;
-                darkTheme.tabLayoutWithCollapsedCollapsingToolbarTextColor = darkTheme.toolbarPrimaryTextAndIconColor;
-                darkTheme.tabLayoutWithCollapsedCollapsingToolbarTabBackground = darkTheme.colorPrimary;
-                darkTheme.tabLayoutWithExpandedCollapsingToolbarTabBackground = darkTheme.backgroundColor;
-                darkTheme.tabLayoutWithExpandedCollapsingToolbarTabIndicator = darkTheme.bottomAppBarIconColor;
-                darkTheme.tabLayoutWithExpandedCollapsingToolbarTextColor = darkTheme.bottomAppBarIconColor;
-                darkTheme.circularProgressBarBackground = context.getColor(android.R.color.system_accent1_900);
-                darkTheme.dividerColor = context.getColor(android.R.color.system_neutral1_600);
+                applyDynamicTheme(
+                        darkTheme,
+                        context,
+                        context.getColor(android.R.color.system_accent1_200),
+                        context.getColor(android.R.color.system_accent2_200),
+                        context.getColor(android.R.color.system_accent3_200),
+                        context.getColor(android.R.color.system_accent1_700),
+                        context.getColor(android.R.color.system_accent1_100),
+                        context.getColor(android.R.color.system_accent3_700),
+                        context.getColor(android.R.color.system_accent3_100),
+                        context.getColor(android.R.color.system_neutral1_900),
+                        context.getColor(android.R.color.system_neutral1_900),
+                        context.getColor(android.R.color.system_neutral1_100),
+                        context.getColor(android.R.color.system_neutral2_700),
+                        context.getColor(android.R.color.system_neutral2_100));
                 darkTheme.isChangeStatusBarIconColorAfterToolbarCollapsedInImmersiveInterface = true;
                 darkTheme.name = "Material You Dark";
 
